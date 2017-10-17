@@ -9,6 +9,7 @@ yarn-error.log*
 .idea
 .vscode
 *.suo
+*.map
 *.ntvs*
 *.njsproj
 *.sln
