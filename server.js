@@ -1,6 +1,7 @@
 const express = require('express');
 // middleware
 const http = require('http');
+const path = require('path')
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 
@@ -9,19 +10,20 @@ const app = express();
 
 // use middleware
 app.use(morgan('dev'));
-app.use(express.static(__dirname));
+app.use(express.static(__dirname + '/dist'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// Routes
-app.get('/', function(req, res) {
-  res.sendFile(path.resolve(__dirname + 'index.html'));
-});
-// handle every other route with index.html, which will contain
-// a script tag to your application's JavaScript file(s).
-app.get('*', function(req, res) {
-  res.sendFile(path.resolve(__dirname + 'index.html'));
-});
+// NOTE: dkim - commenting this out for now. I don't think we need these routes for this setup. see router/index.js
+// // Routes
+// app.get('/', function(req, res) {
+//   res.sendFile(path.resolve(__dirname + '/dist/index.html'));
+// });
+// // handle every other route with index.html, which will contain
+// // a script tag to your application's JavaScript file(s).
+// app.get('*', function(req, res) {
+//   res.sendFile(path.resolve(__dirname + '/index.html'));
+// });
 
 // create/run server
 const PORT = process.env.PORT || 3000;
