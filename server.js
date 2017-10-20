@@ -14,7 +14,11 @@ app.use(express.static(__dirname + '/dist'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// NOTE: dkim - commenting this out for now. I don't think we need these routes for this setup. see router/index.js
+/*
+    NOTE: dkim - commenting this out for now.
+    I don't think we need these routes for this setup.
+    All the routing is handled with vue router. see router/index.js
+*/
 // // Routes
 // app.get('/', function(req, res) {
 //   res.sendFile(path.resolve(__dirname + '/dist/index.html'));
