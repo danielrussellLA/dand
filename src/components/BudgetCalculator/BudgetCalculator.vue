@@ -3,48 +3,65 @@
     <NavBar />
     <div class="wrapper">
         <div class='content'>
-            <transition name="change-state" v-on:after-enter="autofocus">
-                <div v-if="state == 'salary'">
-                    <div>
-                        $ Yearly Salary 
+            <div class='forms'>
+                <div class='goal-container'>
+                    <h1>Monthly Savings Goal</h1>    
+                    <div class='input-box'>
+                        <form>
+                            $<input placeholder="0.00" v-model='goal.amount'/>
+                        </form>
                     </div>
-                    <form v-on:submit.prevent="changeState('expenses')">
-                        <input type='text' v-model="salary" placeholder="salary" autofocus/>
-                    </form>
                 </div>
-            </transition>
-            
-            <transition name="change-state" v-on:after-enter="autofocus">
-                <div v-if="state == 'expenses'">
-                    <div>
-                        $ Monthly Expenses 
+                
+                <div class='income-container'>
+                    <h1>Monthly Income [total]</h1>    
+                    <div class='input-box'>
+                        <form v-on:submit.prevent='addIncome'>
+                            <input placeholder="label" v-model='income.label'/>
+                            $<input placeholder="0.00"v-model='income.amount'/>
+                            <button>+ add income</button>
+                        </form>
                     </div>
-                    <form v-on:submit.prevent="changeState('goal')">
-                        <input type='text' v-model="expenses" placeholder="expenses" autofocus/>
-                    </form>
-                </div>
-            </transition>
-            
-            <transition name="change-state" v-on:after-enter="autofocus">
-                <div v-if="state == 'goal'">
-                    <div>
-                        $ Monthly Savings Goal
+                    <div class='income-sources'>
+                        <div v-for="income in incomeSources" class='income-source'>
+                            <div>
+                                {{ income.label }}
+                            </div>
+                            <div>
+                                {{ income.amount }}
+                            </div>
+                        </div>
                     </div>
-                    <form v-on:submit.prevent="changeState('result')">
-                        <input type='text' v-model="goal" placeholder="goal" autofocus/>
-                    </form>
                 </div>
-            </transition>
+                
+                <div class='expenses-container'>
+                    <h1>Monthly Expenses [total]</h1>
+                    <div class='input-box'>
+                        <form v-on:submit.prevent="addExpense">
+                            <input placeholder="label" v-model='expense.label'/>
+                            $<input placeholder="0.00" v-model='expense.amount'/>
+                            <button>+ add expense</button>
+                        </form>
+                    </div>
+                    <div class='expense-sources'>
+                        <div v-for="expense in expenses" class='expense'>
+                            <div>
+                                {{ expense.label }}
+                            </div>
+                            <div>
+                                {{ expense.amount }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             
-            <transition name="change-state">
-                <div v-if="state == 'result'">
-                    <h1>{{ calculatePercentToGoal() }}% to goal</h1>
-                    <p>
-                        ${{ calculateDollarToGoal() }} to goal
-                    </p>
-                </div>
-            </transition>
-            <!-- <button class="calculate">calculate</button> -->
+            <div class='budget-goals'>
+                <h1>$36,000</h1>
+                <h2>60%</h2>
+                <div class='pie-chart'></div>
+            </div>
+
         </div>
     </div>
 </div>
@@ -64,26 +81,39 @@ export default {
     },
     data() {
         return {
-            salary: '',
-            expenses: '',
-            goal: '',
-            state: 'salary'
+            budgetGoal: '',
+            expenses: [],
+            incomeSources: [],
+            goal: {
+                amount: ''
+            },
+            income: {
+                label: '',
+                amount: ''
+            },
+            expense: {
+                label: '',
+                amount: ''
+            }
         }
     },
     methods: {
-        calculatePercentToGoal() {
-            let result = Math.round((((this.salary / 12 - (this.salary / 12 * (33/100))) - this.expenses) / this.goal) * 100)
-            return parseInt(result) || 0
+        addIncome() {
+            this.incomeSources.push({
+                label: this.income.label,
+                amount: this.income.amount
+            })
+            this.income = {};
         },
-        calculateDollarToGoal() {
-            let result = Math.round(this.goal - ((this.salary / 12 - (this.salary / 12 * (33/100))) - this.expenses))
-            return result > 0 ? result : 0
+        addExpense() {
+            this.expenses.push({
+                label: this.expense.label,
+                amount: this.expense.amount
+            })
+            this.expense = {};
         },
-        changeState(param) {
-            this.state = param;
-        },
-        autofocus() {
-            document.querySelector('input').focus()
+        calculateBudget() {
+            
         }
     }
 }
@@ -100,10 +130,46 @@ export default {
     .content {
         max-width: 800px;
         margin: auto;
-        text-align: center;
+        text-align: left;
+        display: flex;
     }
     .image {
         width: 100%;
+    }
+    
+    .forms {
+        width: 50%;
+    }
+    
+    .input-box {
+        background: lightgrey;
+        padding: 10px;
+    }
+    .income-source {
+        padding: 10px;
+        background: green;
+        color: white;
+    }
+    .expense {
+        padding: 10px;
+        background: red;
+        color: white;
+    }
+    input {
+        font-size: 1em;
+    }
+    
+    .budget-goals {
+        text-align: center;
+        width: 50%;
+    }
+    
+    .pie-chart {
+        height: 200px;
+        width: 200px;
+        background: darkgrey;
+        border-radius: 50%;
+        margin: auto;
     }
     
     .change-state-enter-active, .change-state-leave-active {
