@@ -3,15 +3,48 @@
     <NavBar />
     <div class="wrapper">
         <div class='content'>
-            <h1>{{ calculatePercentToGoal() }}% to goal</h1>
-            <p>
-                ${{calculateDollarToGoal()}}
-            </p>
-            $ Yearly Salary <input type='text' v-model="salary" placeholder="salary"/><br />
-            $ Monthly Expenses <input type='text' v-model="expenses" placeholder="expenses"/><br />
-            $ Monthly Savings Goal <input type='text' v-model="goal" placeholder="goal"/><br />
+            <transition name="change-state" v-on:after-enter="autofocus">
+                <div v-if="state == 'salary'">
+                    <div>
+                        $ Yearly Salary 
+                    </div>
+                    <form v-on:submit.prevent="changeState('expenses')">
+                        <input type='text' v-model="salary" placeholder="salary" autofocus/>
+                    </form>
+                </div>
+            </transition>
             
-            <button class="calculate">calculate</button>
+            <transition name="change-state" v-on:after-enter="autofocus">
+                <div v-if="state == 'expenses'">
+                    <div>
+                        $ Monthly Expenses 
+                    </div>
+                    <form v-on:submit.prevent="changeState('goal')">
+                        <input type='text' v-model="expenses" placeholder="expenses" autofocus/>
+                    </form>
+                </div>
+            </transition>
+            
+            <transition name="change-state" v-on:after-enter="autofocus">
+                <div v-if="state == 'goal'">
+                    <div>
+                        $ Monthly Savings Goal
+                    </div>
+                    <form v-on:submit.prevent="changeState('result')">
+                        <input type='text' v-model="goal" placeholder="goal" autofocus/>
+                    </form>
+                </div>
+            </transition>
+            
+            <transition name="change-state">
+                <div v-if="state == 'result'">
+                    <h1>{{ calculatePercentToGoal() }}% to goal</h1>
+                    <p>
+                        ${{ calculateDollarToGoal() }} to goal
+                    </p>
+                </div>
+            </transition>
+            <!-- <button class="calculate">calculate</button> -->
         </div>
     </div>
 </div>
@@ -24,11 +57,6 @@ import moment from 'moment';
 // TODO: port this data in from vuex store
 import data from '../../../schema/BudgetCalculator.json'
 
-// step 1: ask them how much their yealry salary is
-// step 2: calculate tax rate
-// step 3: ask to enter their monthly expenses
-// step 4: show % to goal and dollar to goal
-
 export default {
     name: 'BudgetCalcuator',
     components: {
@@ -36,9 +64,10 @@ export default {
     },
     data() {
         return {
-            salary: 0,
-            expenses: 0,
-            goal: 0
+            salary: '',
+            expenses: '',
+            goal: '',
+            state: 'salary'
         }
     },
     methods: {
@@ -49,6 +78,12 @@ export default {
         calculateDollarToGoal() {
             let result = Math.round(this.goal - ((this.salary / 12 - (this.salary / 12 * (33/100))) - this.expenses))
             return result > 0 ? result : 0
+        },
+        changeState(param) {
+            this.state = param;
+        },
+        autofocus() {
+            document.querySelector('input').focus()
         }
     }
 }
@@ -69,5 +104,12 @@ export default {
     }
     .image {
         width: 100%;
+    }
+    
+    .change-state-enter-active, .change-state-leave-active {
+        transition: opacity .5s
+    }
+    .change-state-enter, .change-state-leave-to /* .fade-leave-active below version 2.1.8 */ {
+        opacity: 0
     }
 </style>
