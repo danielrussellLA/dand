@@ -1,15 +1,24 @@
 <template>
 <div class="home">
-    home
+    <component :is="contentType" />
 </div>
 </template>
 
 <script>
+import BudgetCalculator from './BudgetCalculator/BudgetCalculator'
+import Article from './Article/Article'
+
+import data from '../../schema/BudgetCalculator.json'
+console.log(data);
 export default {
     name: 'Home',
+    components: {
+        BudgetCalculator,
+        Article
+    },
     data() {
         return {
-
+            contentType: data.contentType.trim()
         }
     }
 }

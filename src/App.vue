@@ -1,17 +1,17 @@
 <template>
 <div id="app">
-    <NavBar />
+    <!-- <NavBar /> -->
     <router-view/>
 </div>
 </template>
 
 <script>
-import NavBar from '@/components/shared/NavBar'
+// import NavBar from '@/components/shared/NavBar'
 
 export default {
     name: 'app',
     components: {
-        NavBar
+        // NavBar
     }
 }
 </script>
@@ -25,5 +25,7 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     color: #2c3e50;
+    height: 100vh;
+    overflow: scroll;
 }
 </style>

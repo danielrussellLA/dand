@@ -1,0 +1,23 @@
+{
+    "contentType": "BudgetCalculator",
+    "navbar": {
+        "logo": "https://maxcdn.icons8.com/Share/icon/Finance//usd1600.png",
+        "links": [{
+                "name": "home",
+                "path": "/"
+            },
+            {
+                "name": "contact",
+                "path": "/contact"
+            },
+            {
+                "name": "about",
+                "path": "/about"
+            },
+            {
+                "name": "sign in",
+                "path": "/signin"
+            }
+        ]
+    }
+}
